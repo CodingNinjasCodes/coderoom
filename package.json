@@ -6,14 +6,19 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
+    "env-cmd": "^10.1.0",
     "firebase": "^7.9.1",
+    "firebase-tools": "^7.13.1",
     "react": "^16.12.0",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.12.0",
+    "react-firebaseui": "^4.1.0",
+    "react-google-login": "^5.1.1",
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd react-scripts start",
+    "build": "env-cmd react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
