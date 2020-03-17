@@ -1,0 +1,214 @@
+.App {
+  font-family: "Nunito", sans-serif;
+  background-color: #000000;
+  color: #fff;
+}
+
+.App-logo {
+  height: 15vh;
+  width: auto;
+}
+
+.App-header {
+  background-color: #000000;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 0px 64px;
+}
+
+.App-header .extras {
+  margin-left: auto;
+}
+
+.App-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 36px;
+  text-decoration: none;
+  border-bottom: 1px dashed #5ce198;
+}
+
+.App-title:active, .App-title:hover {
+  color: #fff;
+}
+
+.homepage {
+  display: flex;
+  padding: 0px 64px;
+  justify-content: center;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+}
+
+.codingpage {
+  height: calc(100vh - 80px);
+}
+
+.CodeMirror-scroll {
+  padding: 16px 32px;
+}
+
+.cm-s-dracula.CodeMirror {
+  padding: 0px;
+  height: calc(100vh - 80px);
+}
+
+p {
+  margin: 0;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 100;
+  margin-bottom: 12px;
+}
+
+.sub-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(124, 124, 124);
+  margin-bottom: 36px;
+  max-width: 500px;
+}
+
+.highlight {
+  color: #5ce198;
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  line-height: 36px;
+  padding: 0 25px;
+  font-size: 14px;
+  border-radius: 58px;
+  text-decoration: none;
+  height: 36px;
+  background: transparent;
+  color: #e4e4e4;
+  border-color: #5ce198;
+  -webkit-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.btn:hover {
+  background: #5ce198;
+  color: black;
+}
+
+.btn-coding {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  line-height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 58px;
+  text-decoration: none;
+  height: 36px;
+  background: transparent;
+  color: #e4e4e4;
+  border-color: #5ce198;
+  -webkit-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.btn-coding:hover {
+  background: #5ce198;
+  color: black;
+}
+
+/**** Google Login Page ****/
+
+.header-loginPage {
+  background-color: #ffffff;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  margin-top: 5%;
+}
+
+.heading-login {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: #222;
+  margin-top: 5%;
+}
+
+/**** Spinning Logo ****/
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  margin-top: 20%;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/**** Quick Access Classes ****/
+
+.margin-l-15 {
+  margin-left: 15px;
+}
+
+.margin-l-10 {
+  margin-left: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/**** Extra ****/
+
+.spotlight {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: radial-gradient(
+      circle,
+      transparent 160px,
+      rgba(0, 0, 0, 0.85) 200px
+  );
+}
