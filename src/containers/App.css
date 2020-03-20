@@ -130,6 +130,10 @@ p {
   color: black;
 }
 
+.btn-coding:focus {
+  outline: none;
+}
+
 /**** Google Login Page ****/
 
 .header-loginPage {

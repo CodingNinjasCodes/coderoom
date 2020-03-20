@@ -1,8 +1,12 @@
 import React from "react";
 import CodeMirror from "react-codemirror";
-import Header from "../../components/Header";
-import { database } from "firebase";
+import Header from "../../components/Header/Header";
+import SideDrawer from '../../components/SideDrawer/SideDrawer';
+import Backdrop from '../../components/Backdrop/Backdrop';
+import { database } from "firebase/app";
 import { logout } from "../../helpers/auth";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 import "codemirror/lib/codemirror";
 import "codemirror/lib/codemirror.css";
@@ -30,8 +34,14 @@ export default class CodingPage extends React.Component {
       const session_id = this.props.match.params.sessionid;
       // console.log(session_id);
 
+      // setting initial state
       this.state = {
-          code: "Loading..."
+          sideDrawerOpen: false,
+          code: "Loading...",
+          cursorPosition: {
+            line: 0,
+            ch: 0
+          }
           // firebaseUser: JSON.parse(localStorage.getItem("firebaseUser"))
       };
 
@@ -50,6 +60,7 @@ export default class CodingPage extends React.Component {
     
   // setting initial state
   state = {
+    sideDrawerOpen: false,
     code: "Loading...",
     cursorPosition: {
       line: 0,
@@ -64,7 +75,6 @@ export default class CodingPage extends React.Component {
       .ref("/code-sessions/" + params.sessionid)
       .once("value")
       .then(snapshot => {
-
         // trimmimg the Date() to remove unnecessary add-ons
         var createdOn = snapshot.val().createdon;
         var createdOnCompressed = createdOn.substring(0, 25);
@@ -117,7 +127,7 @@ export default class CodingPage extends React.Component {
     this.codeRef.child("content").set(newVal);
   };
 
-  // sign-out functionality: 
+  // sign-out functionality
   handleLogout() {
     logout().then(function () {
         localStorage.removeItem(appTokenKey);
@@ -127,9 +137,28 @@ export default class CodingPage extends React.Component {
     }.bind(this));
   }
 
+  // sidebar toggle handler
+  drawerToggleClickHandler = () => {
+    this.setState((prevState) => {
+      return { sideDrawerOpen: !prevState.sideDrawerOpen };
+    });
+  };
+
+  // backdrop (dull background) handler
+  backdropClickHandler = () => {
+    this.setState({ sideDrawerOpen: false });
+  };
+
   render() {
+
+    let backdrop;
+    if (this.state.sideDrawerOpen) {
+      backdrop = <Backdrop click={this.backdropClickHandler} />
+    }
+
     return (
       <React.Fragment>
+
         <Header
           style={{ background: "#1d1f27" }}
           extras={
@@ -140,9 +169,16 @@ export default class CodingPage extends React.Component {
               <button className="btn-coding margin-l-10" onClick={this.handleLogout}>
                 Sign Out
               </button>
+              <button className="btn-coding margin-l-10" onClick={this.drawerToggleClickHandler}>
+                <FontAwesomeIcon icon={faBars} />
+              </button>
             </div>
           }
         />
+
+        <SideDrawer show={this.state.sideDrawerOpen} />
+        { backdrop }
+        
         <div className="coding-page">
           <CodeMirror
             ref={r => (this.codemirror = r)}

@@ -1,13 +1,16 @@
 import React from "react";
+import random from "random-key";
+import logo from '../../images/CNLOGO.svg';
 import { Helmet } from 'react-helmet';
 import { FontIcon, RaisedButton } from "material-ui";
 import { loginWithGoogle } from "../../helpers/auth";
 import { firebaseAuth } from "../../config/firebase-config";
-import logo from '../../images/CNLOGO.svg';
+import { database } from "firebase/app";
 
 const firebaseAuthKey = "firebaseAuthInProgress";
 const appTokenKey = "appToken";
 const sessionID = "sessionID";
+const usersList = [];
 
 export default class Login extends React.Component {
 
@@ -16,7 +19,8 @@ export default class Login extends React.Component {
         // console.log(this.props.match.params);
 
         this.state = {
-            splashScreen: false
+            splashScreen: false,
+            key: random.generate(3), // for storing connected-users
         };
 
         this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
@@ -43,7 +47,7 @@ export default class Login extends React.Component {
                 const session_id = localStorage.getItem(sessionID);
                 // redirect to /home/:session_id
                 this.props.history.push(`/home/${session_id}`);
-                localStorage.removeItem(sessionID);
+                // localStorage.removeItem(sessionID);
 
             } else {
                 // console.log("** sessionID absent **");
@@ -56,26 +60,94 @@ export default class Login extends React.Component {
 
         // called whenever user sign-in/sign-out or token expires
         firebaseAuth().onAuthStateChanged(user => {
-            if (user) {
-                console.log("User signed in: ", user);
+            try {
+                if (user) {
 
-                localStorage.removeItem(firebaseAuthKey);
+                    if (localStorage.getItem(sessionID)) {
+                        const session_id = localStorage.getItem(sessionID);
 
-                // setting appTokenKey as "uid" of signed-in user
-                localStorage.setItem(appTokenKey, user.uid);
+                        var newUser;
 
-                if (localStorage.getItem(sessionID)) {
-                    const session_id = localStorage.getItem(sessionID);
-                    // console.log("** sessionID present **");
-                    // redirect to /home/:session_id
-                    this.props.history.push(`/home/${session_id}`);
-                    localStorage.removeItem(sessionID);
-                } else {
-                    // console.log("** sessionID absent **");
-                    // redirect to /home
-                    this.props.history.push(`/home`);
+                        // checking if user already present in database
+                        database()
+                        .ref(`code-sessions/${session_id}/users-connected`)
+                        .on("value", function(snapshot){
+                            snapshot.forEach(function(childSnapshot){
+                                var userData = childSnapshot.val();
+                                if(userData.user_id === user.uid){
+                                    newUser = false;
+                                    // console.log("User already connected previously.");
+                                }
+                            });
+                            if(newUser !== false){
+                                newUser = true;
+                            }
+                        })
+
+                        function firebaseDelay(key) {
+
+                            // adding new user details in database
+                            if(newUser === true){
+                                // console.log("User connected to the session.");
+                                database()
+                                .ref(`code-sessions/${session_id}/users-connected/user-` + key)
+                                .set({
+                                    user_id: user.uid,
+                                    user_name: user.displayName,
+                                    user_email: user.email,
+                                    user_photo: user.photoURL
+                                });
+                            }
+
+                            // displaying users-connected from database
+                            database()
+                            .ref(`code-sessions/${session_id}/users-connected`)
+                            .on("value", function(snapshot){
+                                console.log("\nConnected users: ");
+                                snapshot.forEach(function(childSnapshot){
+                                    var userData = childSnapshot.val();
+                                    console.log(userData.user_name + " - " + userData.user_email);
+                                    // pushing user details to the 'usersList' array
+                                    usersList.push(
+                                        <li>
+                                            <img src={userData.user_photo} alt="Avatar" />
+                                            <span>{userData.user_name}</span>
+                                        </li>
+                                    );
+                                });
+                                console.log("\n");
+                            });
+
+                        }
+
+                        // wait 4 seconds to complete fetching and storing data in database
+                        setTimeout(firebaseDelay, 4000, this.state.key);
+
+                    }
+                    
+                    // console.log("User signed in: ", JSON.stringify(user));
+                    console.log("\n User signed in:", user);
+
+                    localStorage.removeItem(firebaseAuthKey);
+
+                    // setting appTokenKey as "uid" of signed-in user
+                    localStorage.setItem(appTokenKey, user.uid);
+
+                    if (localStorage.getItem(sessionID)) {
+                        const session_id = localStorage.getItem(sessionID);
+                        // console.log("** sessionID present **");
+                        // redirect to /home/:session_id
+                        this.props.history.push(`/home/${session_id}`);
+                        localStorage.removeItem(sessionID);
+                    } else {
+                        // console.log("** sessionID absent **");
+                        // redirect to /home
+                        this.props.history.push(`/home`);
+                    }
+
                 }
-
+            } catch(error) {
+                console.log("Error in authentication.");
             }
         });
     }
@@ -130,3 +202,6 @@ const SplashScreen = () => (
         <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
 );
+
+// exporting connected-users list
+export {usersList};

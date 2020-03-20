@@ -1,7 +1,8 @@
 import React from "react";
 import random from "random-key";
-import Header from "../../components/Header";
-import { database } from "firebase";
+import Header from "../../components/Header/Header";
+import { database } from "firebase/app";
+import { firebaseAuth } from "../../config/firebase-config";
 import { logout } from "../../helpers/auth";
 
 const appTokenKey = "appToken";
@@ -13,10 +14,10 @@ export default class HomePage extends React.Component {
     super(props);
 
     // this.state = {
-    //     //firebaseUser: JSON.parse(localStorage.getItem("firebaseUser"))
+    //     // firebaseUser: JSON.parse(localStorage.getItem("firebaseUser"))
     // };
 
-    //console.log("User:", this.state.firebaseUser);
+    // console.log("User:", this.state.firebaseUser);
     this.handleLogout = this.handleLogout.bind(this);
 
     if(localStorage.getItem(sessionID)){
@@ -44,18 +45,28 @@ export default class HomePage extends React.Component {
       });
   };
 
-  // when new session is created (Share Code button is clicked)
+  // when new session is created ('Share Code' button is clicked)
   onNewGround = () => {
+    var user = firebaseAuth().currentUser;
     database()
-      .ref("code-sessions/" + this.state.key)
-      .set({
-        content: "<h1> I ♥ Coding! </h1>",
-        createdon: Date()
-      });
+    .ref("code-sessions/" + this.state.key)
+    .set({
+      content: "<h1> I ♥ Coding! </h1>",
+      createdon: Date()
+    });
+    // adding details of the user to the database
+    database()
+    .ref("code-sessions/" + this.state.key + "/creator")
+    .set({
+        user_id: user.uid,
+        user_name: user.displayName,
+        user_email: user.email,
+        user_photo: user.photoURL
+    });
     this.props.history.push("/home/" + this.state.key);
   };
 
-  // sign-out functionality: 
+  // sign-out functionality
   handleLogout() {
     logout().then(function () {
         localStorage.removeItem(appTokenKey);

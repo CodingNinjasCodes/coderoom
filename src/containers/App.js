@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { createBrowserHistory } from "history";
 import Login from "./pages/Login";
 import Coding from "./pages/Coding";
 import Home from './pages/Home';
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import createBrowserHistory from "history/createBrowserHistory";
 
 const muiTheme = getMuiTheme({
   appBar: {
