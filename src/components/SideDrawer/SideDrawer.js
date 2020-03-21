@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './SideDrawer.css';
-import { usersList } from '../../containers/pages/Login';
+import { usersList } from '../../containers/pages/Coding';
 
 const sideDrawer = props => {
 

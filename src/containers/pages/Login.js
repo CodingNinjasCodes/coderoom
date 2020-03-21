@@ -10,7 +10,6 @@ import { database } from "firebase/app";
 const firebaseAuthKey = "firebaseAuthInProgress";
 const appTokenKey = "appToken";
 const sessionID = "sessionID";
-const usersList = [];
 
 export default class Login extends React.Component {
 
@@ -99,25 +98,6 @@ export default class Login extends React.Component {
                                 });
                             }
 
-                            // displaying users-connected from database
-                            database()
-                            .ref(`code-sessions/${session_id}/users-connected`)
-                            .on("value", function(snapshot){
-                                console.log("\nConnected users: ");
-                                snapshot.forEach(function(childSnapshot){
-                                    var userData = childSnapshot.val();
-                                    console.log(userData.user_name + " - " + userData.user_email);
-                                    // pushing user details to the 'usersList' array
-                                    usersList.push(
-                                        <li>
-                                            <img src={userData.user_photo} alt="Avatar" />
-                                            <span>{userData.user_name}</span>
-                                        </li>
-                                    );
-                                });
-                                console.log("\n");
-                            });
-
                         }
 
                         // wait 4 seconds to complete fetching and storing data in database
@@ -202,6 +182,3 @@ const SplashScreen = () => (
         <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
 );
-
-// exporting connected-users list
-export {usersList};

@@ -12,12 +12,7 @@ export default class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
-
-    // this.state = {
-    //     // firebaseUser: JSON.parse(localStorage.getItem("firebaseUser"))
-    // };
-
-    // console.log("User:", this.state.firebaseUser);
+    
     this.handleLogout = this.handleLogout.bind(this);
 
     if(localStorage.getItem(sessionID)){

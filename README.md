@@ -1,5 +1,5 @@
 # Coderoom | Coding Ninjas
-## (http://coderoom-aecd1.firebaseapp.com/)
+### (http://coderoom-aecd1.firebaseapp.com)
 A collaborative place for sharing code in realtime!
 
 ## To run the project:

@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header";
 import SideDrawer from '../../components/SideDrawer/SideDrawer';
 import Backdrop from '../../components/Backdrop/Backdrop';
 import { database } from "firebase/app";
+import { firebaseAuth } from "../../config/firebase-config";
 import { logout } from "../../helpers/auth";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
@@ -25,37 +26,68 @@ import 'codemirror/addon/comment/comment';
 
 const appTokenKey = "appToken";
 const sessionID = "sessionID";
+const usersList = [];
 
 export default class CodingPage extends React.Component {
 
   constructor(props) {
-      super(props);
+    super(props);
 
-      const session_id = this.props.match.params.sessionid;
-      // console.log(session_id);
+    const session_id = this.props.match.params.sessionid;
+    // console.log(session_id);
 
-      // setting initial state
-      this.state = {
-          sideDrawerOpen: false,
-          code: "Loading...",
-          cursorPosition: {
-            line: 0,
-            ch: 0
-          }
-          // firebaseUser: JSON.parse(localStorage.getItem("firebaseUser"))
-      };
+    // if appTokenKey is not found in localStorage,
+    // then redirect to login page
+    if (!localStorage.getItem(appTokenKey)) {
+      localStorage.setItem("sessionID", session_id);
+      this.props.history.push(`/login`);
+      return;
+    }
 
-      // console.log("User:", this.state.firebaseUser);
+    // setting initial state
+    this.state = {
+        sideDrawerOpen: false,
+        code: "Loading...",
+        cursorPosition: {
+          line: 0,
+          ch: 0
+        },
+    };
 
-      this.handleLogout = this.handleLogout.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
 
-      // if appTokenKey is not found in localStorage,
-      // then redirect to login page
-      if (!localStorage.getItem(appTokenKey)) {
-          localStorage.setItem("sessionID", session_id);
-          this.props.history.push(`/login`);
-          return;
+    // to fetch currently signed-in user
+    firebaseAuth().onAuthStateChanged((user) => {
+      try {
+        if (user) {
+          
+          // displaying users-connected from database
+          database()
+          .ref(`code-sessions/${session_id}/users-connected`)
+          .on("value", function(snapshot){
+              // console.log("\nConnected users: ");
+              var i = 0;
+              snapshot.forEach(function(childSnapshot){
+                  var userData = childSnapshot.val();
+                  // console.log(userData.user_name + " - " + userData.user_email);
+                  usersList.push(
+                      <li key={i}>
+                          <img src={userData.user_photo} alt="Avatar" />
+                          <span>{userData.user_name}</span>
+                      </li>
+                  );
+                  i++;
+              });
+              // console.log("\n");
+          });
+
+        } else {
+          console.log("Cannot fetch currently signed-in user.");
+        }
+      } catch(error) {
+        console.log("Error in authentication.");
       }
+    });
   }
     
   // setting initial state
@@ -208,3 +240,6 @@ export default class CodingPage extends React.Component {
   }
 
 }
+
+// exporting connected-users list
+export {usersList};
