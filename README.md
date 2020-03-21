@@ -5,6 +5,8 @@ A collaborative place for sharing code in realtime!
 ## To run the project (locally on your machine):
 - Clone the project.
 - Run command `npm install` to install all the dependencies required. 
+
+#### For development mode:
 - Run command `npm start` in the terminal to run the project in development mode.
 
 #### For production mode:
